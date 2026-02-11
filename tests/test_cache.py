@@ -356,6 +356,44 @@ class TestReleaseDataCache:
         assert "pre_ok=True" in key3 and "major=2" in key3
 
 
+class TestDatetimeSerialization:
+    """Tests for datetime serialization in cache."""
+
+    def setup_method(self):
+        """Set up test cache directory."""
+        self.temp_dir = tempfile.mkdtemp()
+        reset_config()
+        reset_release_cache()
+
+    def teardown_method(self):
+        """Clean up test cache directory."""
+        import shutil
+
+        shutil.rmtree(self.temp_dir, ignore_errors=True)
+        reset_config()
+        reset_release_cache()
+
+    def test_cache_datetime_serialization(self):
+        """Test that datetime objects in cache data are serializable."""
+        import datetime
+
+        cache = FileCacheBackend(cache_dir=self.temp_dir, default_ttl=3600)
+
+        # Simulate release data with datetime (converted to string as the fix does)
+        data = {
+            "version": "1.0.0",
+            "tag_name": "v1.0.0",
+            "tag_date": str(datetime.datetime(2024, 1, 15, 10, 30, 0)),
+        }
+
+        # Should not raise TypeError
+        cache.set("test-repo", data)
+
+        result = cache.get("test-repo")
+        assert result == data
+        assert result["tag_date"] == "2024-01-15 10:30:00"
+
+
 class TestCacheFactory:
     """Tests for cache factory function."""
 

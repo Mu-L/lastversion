@@ -351,8 +351,9 @@ def latest(
                     release["version"] = version
                 else:
                     release["version"] = str(version)
-                    if "tag_date" in release:
-                        release["tag_date"] = str(release["tag_date"])
+                # Convert tag_date for both json and dict to ensure cache serialization works
+                if "tag_date" in release:
+                    release["tag_date"] = str(release["tag_date"])
                 release["v_prefix"] = tag.startswith("v")
                 version_macro = "upstream_version" if "module_of" in repo_data else "version"
                 version_macro = f"%{{{version_macro}}}"
