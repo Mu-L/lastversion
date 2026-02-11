@@ -25,7 +25,8 @@ def test_gitlab_format_json():
 
     v = latest(repo, output_format="dict")
 
-    assert "tag_date" in v and v["tag_date"].day == 22
+    # tag_date is converted to string for JSON/cache serialization
+    assert "tag_date" in v and "-22 " in v["tag_date"]
 
 
 def test_gitlab_at():
