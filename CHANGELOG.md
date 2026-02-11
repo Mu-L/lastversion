@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [3.6.8] - 2026-02-12
+### Fixed
+* Fixed datetime JSON serialization error when caching release data with dict output format
+  - The `tag_date` field is now converted to string for both `json` and `dict` formats
+  - This fixes the "Object of type 'datetime' is not JSON serializable" warning when processing spec files
+
 ## [3.6.7] - 2025-01-04
 ### Changed
 * Simplified lock mechanism: now uses a single lock file instead of a lock directory
